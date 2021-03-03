@@ -1,4 +1,16 @@
 //Pages: Holds pages to serve via HTTP
+#include <Arduino.h>
+#include <WiFi.h>
+#include "settings.h"
+
+extern Settings _settings;
+extern const char ApSsid[];
+extern byte curexternrentApMode;
+extern byte requestApMode;
+extern byte clientConnectionState;
+extern bool clientReconnect;
+
+
 
 String getNextToken(String& s, int& offset)
 {
@@ -101,27 +113,27 @@ void serveWifiSetAp(WiFiClient& client, String req)
   String s = "";
   appendHttp200(s);
 
-  Serial1.println("Setting AP");
-  Serial1.println(req);
+  Serial.println("Setting AP");
+  Serial.println(req);
 
   //"/setap?ssid=myssid&pass=mypass
   int index0 = req.indexOf("?ssid=", 3);
   if (index0 > 0)
   {
-    Serial1.println(index0);
+    Serial.println(index0);
     int index1 = req.indexOf("&pass=", index0);
     if (index1 > 0)
     {
-      Serial1.println(index1);
+      Serial.println(index1);
       int index2 = req.indexOf(" HTTP/", index1);
       if (index2 == -1)
         index2 = req.length();
       String ssid = req.substring(index0+6, index1);
       String pass = req.substring(index1+6, index2);
 
-      Serial1.println(index2);
-      Serial1.println(ssid);
-      Serial1.println(pass);
+      Serial.println(index2);
+      Serial.println(ssid);
+      Serial.println(pass);
       
       _settings._wifiSsid = ssid;
       _settings._wifiPass = pass;
@@ -135,7 +147,7 @@ void serveWifiSetAp(WiFiClient& client, String req)
       s += F("<br><br><a href=\"/\">Back</a><br>");
       s += ssid;     
 
-      Serial1.println(s);
+      Serial.println(s);
       requestApMode = WIFI_STA;
       clientReconnect = true;
       delay(1);
@@ -202,19 +214,19 @@ void serveMqtt(WiFiClient& client, String req)
 
 bool setStringIfStartsWith(String& s, String startswith, String& set)
 {
-  /*Serial1.print("  checking if ");
-  Serial1.print(s);
-  Serial1.print(" startswith ");
-  Serial1.println(startswith);*/
+  /*Serial.print("  checking if ");
+  Serial.print(s);
+  Serial.print(" startswith ");
+  Serial.println(startswith);*/
 
   if (s.startsWith(startswith))
   {
     set = s.substring(startswith.length());
-    Serial1.print("match >");
-    Serial1.print(startswith);
-    Serial1.print("< = >");
-    Serial1.print(set);
-    Serial1.println("<");
+    Serial.print("match >");
+    Serial.print(startswith);
+    Serial.print("< = >");
+    Serial.print(set);
+    Serial.println("<");
 
     return true;
   }
@@ -226,8 +238,8 @@ void serveSetMqtt(WiFiClient& client, String req)
 {
   String s = "";
 
-  Serial1.println("Setting MQTT & Device keys");
-  Serial1.println(req);
+  Serial.println("Setting MQTT & Device keys");
+  Serial.println(req);
 
   int offset = 0;
   String token = getNextToken(req, offset);

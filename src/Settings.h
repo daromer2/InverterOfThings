@@ -1,23 +1,34 @@
 //Settings: Stores persistant settings, loads and saves to EEPROM
 
-#include <arduino.h>
+#include <Arduino.h>
 #include <EEPROM.h>
+
+#if __has_include("localcredentials.h") 
+#include "localcredentials.h"
+#endif
+
+#ifndef DEFAULT_SSID
+#define DEFAULT_SSID ""
+#endif
+#ifndef DEFAULT_PASSWORD
+#define DEFAULT_PASSWORD ""
+#endif
 
 class Settings
 {
   public:
 
     bool _valid = false;
-    String _wifiSsid = "";
-    String _wifiPass = "";
+    String _wifiSsid = DEFAULT_SSID;
+    String _wifiPass = DEFAULT_PASSWORD;
   
-    String _deviceType = "";
+    String _deviceType = "H55";
     String _deviceName = "";
-    String _mqttServer = "";
-    //short _mqttPort = "1883";
+    String _mqttServer = "192.168.1.5";
+    short _mqttPort = 1883;
     String _mqttUser = "";
     String _mqttPassword = "";
-    short  _mqttPort = 30;
+    //short  _mqttPort = 30;
 
     short readShort(int offset)
     {
