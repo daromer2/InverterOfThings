@@ -198,6 +198,10 @@ void loop()
     serveMqtt(client, req);
   } else if (req.indexOf("/setmqtt") != -1) {
     serveSetMqtt(client, req);
+   
+  } else if (req.indexOf("/debug") != -1) {
+    serveDebug(client, req);  
+   
   } else if (req.indexOf("/reboot") != -1) {
     serve404(client);
     delay(100);
@@ -426,6 +430,9 @@ void sendRaw() {
   if (_otherMessagesUpdated) {
     _otherMessagesUpdated = false;
     Serial1.print("Sending other data to mqtt: ");
+   
+   _settings._DebugLog += "<br> " + "Sending other data to mqtt:";
+   
     Serial1.println(_otherBuffer);
     mqttclient.publish((String(topic) + String("/debug/recieved")).c_str(), String(_otherBuffer).c_str() );
   }
@@ -448,6 +455,9 @@ void callback(char* top, byte* payload, unsigned int length) {
   Serial1.print(_nextCommandNeeded);
   Serial1.print(F(" Setting next command to : "));
   Serial1.println(st);
-  _setCommand = st;
+ 
+  _settings._DebugLog += "<br> " + " Current Command::" +_nextCommandNeeded+" Settings Next Command to :"+ st;
+ 
+ _setCommand = st;
   // Add code to put the call into the queue but verify it firstly. Then send the result back to debug/new window?
 }
