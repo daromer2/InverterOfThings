@@ -1,3 +1,8 @@
+# NO LONGER SUPPORTED:  ITS REPLACED BY:
+https://github.com/daromer2/SolarInverterController
+
+
+
 # InverterOfThings Logger (FORK and total rebuild)
 ESP8266 based WiFi interface for Voltronic Axpert MppSolar PIP inverters
 
